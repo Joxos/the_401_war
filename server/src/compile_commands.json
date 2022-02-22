@@ -1,0 +1,7 @@
+[
+{
+  "directory": "D:/source/repos/the_401_war/build",
+  "command": "clang++ -ID:/source/repos/the_401_war/src/../include -g -Xclang -gcodeview -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -O0 -o CMakeFiles\\main.dir\\main.cpp.obj -c D:\\source\\repos\\the_401_war\\src\\main.cpp",
+  "file": "D:\\source\\repos\\the_401_war\\src\\main.cpp"
+}
+]
