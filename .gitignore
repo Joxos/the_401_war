@@ -1,4 +1,5 @@
 *~
+.log/
 
 # Server
 server/node_modules/

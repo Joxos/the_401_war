@@ -1,4 +1,3 @@
-import { verify } from "crypto";
 import { Server } from "socket.io";
 let fs = require("fs");
 
@@ -17,29 +16,33 @@ fs.readFile('./users.json', 'utf8', (err: string, data: string) => {
 
 // when connected
 io.on("connection", (socket) => {
+    // show connected socket
     console.info(`${socket.id} connected`);
 
+    // show disconnect message
     socket.on("disconnect", () => {
         console.info(`${socket.id} disconnected`)
     });
 
+    // verify login
     function verifyLogin(uid: string, password: string) {
         for (let user of users) {
-            if (user.get("uid") == uid && user.get("password") == password) {
+            if (user["uid"] == uid && user["password"] == password) {
                 return true;
             }
         }
         return false;
     };
-    socket.on("login", (uid, password) => {
-        console.info(`${socket.id}: login\n  uid: ${uid}\n  password: ${password}`)
+    socket.on("login", ({ uid, password }) => {
+        console.info(`${socket.id}: login\n  uid: ${uid}\n  password: ${password}`);
         if (verifyLogin(uid, password)) {
+            console.info(`${socket.id}: login success`);
             socket.emit("success");
         } else {
+            console.info(`${socket.id}: login failed`);
             socket.emit("failed");
         }
     });
-
 });
 
 // listen on port 3000
