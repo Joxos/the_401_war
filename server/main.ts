@@ -4,15 +4,8 @@ let fs = require("fs");
 const io = new Server();
 
 // read users file
-let users: any;
-fs.readFile('./users.json', 'utf8', (err: string, data: string) => {
-    if (err) {
-        console.info(`error reading users file: ${err}`);
-    } else {
-        users = JSON.parse(data);
-    }
-    console.info(`read users storage file:\n${JSON.stringify(users, null, 2)}\n`);
-});
+let users = require("./users");
+console.info(`read users storage file:\n${JSON.stringify(users, null, 2)}\n`);
 
 // when connected
 io.on("connection", (socket) => {
