@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joxos",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^16.11.26",
+    "socket.io": "^4.4.1"
+  }
+}

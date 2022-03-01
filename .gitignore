@@ -1,4 +1,7 @@
 *~
 
 # Server
-server/build/
+server/node_modules/
+server/.log/
+server/*.js
+server/tsconfig.tsbuildinfo
