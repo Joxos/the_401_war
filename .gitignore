@@ -5,3 +5,9 @@ server/node_modules/
 server/.log/
 server/*.js
 server/tsconfig.tsbuildinfo
+
+# Client
+client/node_modules/
+client/.log/
+client/*.js
+client/tsconfig.tsbuildinfo
