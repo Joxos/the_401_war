@@ -1,43 +1,62 @@
 import { Server } from "socket.io";
-let fs = require("fs");
 
 const io = new Server();
 
 // read users file
 let users = require("./users");
-console.info(`read users storage file:\n${JSON.stringify(users, null, 2)}\n`);
+console.info("read users storage file");
+
+// init online user list
+let online_users: any = [];
 
 // when connected
 io.on("connection", (socket) => {
     // show connected socket
-    console.info(`${socket.id} connected`);
+    console.info(`${socket.id}: connected`);
 
     // show disconnect message
     socket.on("disconnect", () => {
-        console.info(`${socket.id} disconnected`)
-    });
-
-    // verify login
-    function verifyLogin(uid: string, password: string) {
-        for (let user of users) {
-            if (user["uid"] == uid && user["password"] == password) {
-                return true;
+        console.info(`${socket.id}: disconnected`)
+        for (let i: number = 0; i < online_users.length; ++i) {
+            if (online_users[i].socketid == socket.id) {
+                console.info(`${socket.id}: ${online_users[i].uid}: ${online_users[i].name} logout`)
+                online_users.splice(i, 1);
+                break;
             }
         }
-        return false;
-    };
-    socket.on("login", ({ uid, password }) => {
-        console.info(`${socket.id}: login\n  uid: ${uid}\n  password: ${password}`);
-        if (verifyLogin(uid, password)) {
-            console.info(`${socket.id}: login success`);
-            socket.emit("success");
-        } else {
-            console.info(`${socket.id}: login failed`);
-            socket.emit("failed");
-        }
     });
+
+    // login
+    socket.on("login", ({ uid, password }) => {
+        console.info(`${socket.id}: uid: ${uid} password: ${password} try to login`);
+        for (let user of users) {
+            if (user.uid == uid && user.password == password) {
+                // check if already online
+                for (let ou of online_users) {
+                    if (ou.uid == uid) {
+                        console.info(`${socket.id}: ${uid} already logined`);
+                        socket.emit("failed");
+                        return;
+                    }
+                    if (ou.socketid == socket.id) {
+                        console.info(`${socket.id}: same socket login again`);
+                        socket.emit("failed");
+                        return;
+                    }
+                }
+                // add to online users
+                online_users.push({ "name": user.name, "uid": user.uid, "socketid": socket.id });
+                console.info(`${socket.id}: ${uid}: ${user.name}: logined`);
+                socket.emit("success");
+                return;
+            }
+        }
+        console.info(`${socket.id}: uid: ${uid} login failed`);
+        socket.emit("failed");
+    });
+
 });
 
 // listen on port 3000
 io.listen(3000);
-console.info("started listening at *:3000\n");
+console.info("started listening at *:3000");
